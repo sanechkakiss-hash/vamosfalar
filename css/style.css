@@ -58,8 +58,6 @@ button { font: inherit; cursor: pointer; }
 .btn--primary:hover { background: var(--primary-hover); box-shadow: 0 8px 20px rgba(43, 42, 67, .25); }
 .btn--dark { background: var(--black); color: #fff; text-transform: uppercase; letter-spacing: .04em; font-size: 14px; min-height: 52px; }
 .btn--dark:hover { background: #24232f; }
-.btn--gold { background: var(--gold); color: var(--primary); }
-.btn--gold:hover { background: #ffd34d; box-shadow: 0 8px 20px rgba(242, 194, 48, .35); }
 .btn--light { background: #fff; color: var(--primary); }
 .btn--light:hover { box-shadow: 0 8px 20px rgba(0, 0, 0, .2); }
 .btn--block { width: 100%; }
@@ -132,7 +130,6 @@ button { font: inherit; cursor: pointer; }
 .section__title--left { text-align: left; }
 .section__lead { text-align: center; font-size: 18px; color: var(--ink); max-width: 940px; margin: 0 auto; }
 .eyebrow { text-transform: uppercase; letter-spacing: .1em; font-size: 13px; font-weight: 600; color: var(--red); margin-bottom: 12px; }
-.eyebrow--light { color: var(--gold); }
 
 /* ============ Audience ============ */
 
@@ -221,15 +218,8 @@ button { font: inherit; cursor: pointer; }
 /* ============ About ============ */
 /* inset rounded panels instead of full-width colour bands */
 .panel { border-radius: 32px; padding: 64px 60px; background: var(--bg-alt); }
-.panel--dark {
-  background:
-    radial-gradient(circle at 0% 0%, rgba(31, 122, 53, .28), transparent 45%),
-    radial-gradient(circle at 100% 100%, rgba(225, 32, 31, .22), transparent 45%),
-    var(--primary);
-  color: #fff;
-}
-.section.individual { padding: 0 0 24px; }
-.section.about { padding: 0; }
+.section.individual { padding: 0 0 80px; }
+.section.about { padding: 0 0 80px; }
 /* hairline between consecutive white sections */
 .section--rule { position: relative; }
 .section--rule::before {
@@ -238,24 +228,24 @@ button { font: inherit; cursor: pointer; }
 }
 .about__inner { display: grid; grid-template-columns: 1fr 1.35fr; gap: 56px; align-items: center; }
 .about__title { font-size: clamp(28px, 3.2vw, 38px); }
-.about__lead { margin-top: 18px; font-size: 17px; line-height: 1.6; color: rgba(255, 255, 255, .82); }
+.about__lead { margin-top: 18px; font-size: 17px; line-height: 1.6; color: var(--ink-soft); }
 .about__numbers { display: flex; gap: 36px; margin: 28px 0 32px; }
-.about__numbers strong { display: block; font-size: 42px; font-weight: 700; line-height: 1; color: var(--gold); }
-.about__numbers span { font-size: 14px; color: rgba(255, 255, 255, .75); }
+.about__numbers strong { display: block; font-size: 42px; font-weight: 700; line-height: 1; color: var(--primary); }
+.about__numbers span { font-size: 14px; color: var(--ink-soft); }
 .about__features { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
 .tile {
   padding: 22px; border-radius: var(--radius-sm);
-  background: rgba(255, 255, 255, .07); border: 1px solid rgba(255, 255, 255, .12);
-  transition: background-color .2s, transform .2s;
+  background: #fff; border: 1px solid var(--line);
+  transition: box-shadow .2s, transform .2s, border-color .2s;
 }
-.tile:hover { background: rgba(255, 255, 255, .12); transform: translateY(-3px); }
+.tile:hover { border-color: transparent; box-shadow: var(--shadow); transform: translateY(-3px); }
 .tile h3 { font-size: 17px; font-weight: 600; margin-top: 14px; }
-.tile p { font-size: 14px; color: rgba(255, 255, 255, .7); margin-top: 6px; }
+.tile p { font-size: 14px; color: var(--ink-soft); margin-top: 6px; }
 .tile__ico { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; }
 .tile__ico .ico { width: 22px; height: 22px; }
-.tile__ico--gold { background: var(--gold); color: var(--primary); }
-.tile__ico--green { background: var(--green); color: #fff; }
-.tile__ico--red { background: var(--red); color: #fff; }
+.tile__ico--navy { background: #ecebf3; color: var(--primary); }
+.tile__ico--green { background: #e9f5ec; color: var(--green); }
+.tile__ico--red { background: #fdecec; color: var(--red); }
 
 /* ============ Team ============ */
 .team__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-top: 40px; align-items: start; }
