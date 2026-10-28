@@ -71,7 +71,6 @@ window.I18N = {
     'individual.list': '<li>Personal schedule</li><li>Topics that match your goals</li><li>Custom programs</li><li>Any teacher of your choice</li><li>Your own group of 2 or more — study together with friends, family or colleagues</li>',
     'individual.wa': 'Hello! I am interested in private Portuguese lessons.',
 
-    'about.eyebrow': 'Why VamosFalar',
     'about.title': 'About VamosFalar school',
     'about.lead': 'We don’t teach “textbook Portuguese” — we teach the living language people speak on the street, in cafés and at the office. From the very first lesson: live practice with native speakers — fully in Portuguese or with explanations in English, whichever suits you.',
     'about.n1': 'students already speaking',
