@@ -98,7 +98,7 @@ window.I18N = {
 
     'team.francisco.name': 'Francisco Chingueva',
     'team.francisco.role': 'Co-founder and teacher at VamosFalar',
-    'team.francisco.bio': '<p>A native Portuguese speaker who considers teaching his calling. With his help, more than 50 Russian, Chinese and American students have already started speaking Portuguese. And this is only the beginning!</p><p>He has a university degree. He loves communicating and teaching others, and organizes debates at home, among students and friends. Open to new opportunities. Speaks English.</p><p>A former musician (though can musicians ever really be former?). If he offers to sing — don’t refuse, you won’t regret it :)</p>',
+    'team.francisco.bio': '<p>A native Portuguese speaker who considers teaching his calling. With his help, more than 50 students from Russia, China, the USA, Portugal, Guinea-Bissau and Ukraine have already started speaking Portuguese. And this is only the beginning!</p><p>He has a university degree. He loves communicating and teaching others, and organizes debates at home, among students and friends. Open to new opportunities. Speaks English.</p><p>A former musician (though can musicians ever really be former?). If he offers to sing — don’t refuse, you won’t regret it :)</p>',
 
     'team.yolanda.name': 'Yolanda',
     'team.yolanda.role': 'Teacher at VamosFalar',
