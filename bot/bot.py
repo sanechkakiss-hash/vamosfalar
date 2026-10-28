@@ -32,7 +32,8 @@ from aiogram.types import (
 BOT_TOKEN = os.environ["BOT_TOKEN"]
 # Куда присылать результаты (id чата/группы). Пусто — не присылать.
 ADMIN_CHAT_ID = os.environ.get("ADMIN_CHAT_ID", "").strip()
-WA_PHONE = os.environ.get("WA_PHONE", "244943090008")
+# Telegram, куда пишут для записи на курс (без @).
+CONTACT_USERNAME = os.environ.get("CONTACT_USERNAME", "dlologi").lstrip("@")
 SITE_URL = os.environ.get("SITE_URL", "https://vamosfalar.net/")
 QUESTIONS_FILE = Path(os.environ.get("QUESTIONS_FILE", Path(__file__).with_name("questions.json")))
 
@@ -92,14 +93,14 @@ TEXTS = {
         "start": "Начать тест",
         "progress": "Вопрос {i} из {n} · уровень {level}",
         "dont_know": "🤷 Не знаю",
-        "score": "Правильных ответов: <b>{c} из {n}</b>",
-        "level": "Ваш уровень: <b>{level}</b>",
+        "score": "Верных ответов: <b>{c}/{n}</b>",
+        "level": "Ваш уровень португальского: <b>{level}</b>",
         "again": "🔄 Пройти ещё раз",
-        "wa": "💬 Записаться в WhatsApp",
+        "enroll": "✍️ Записаться в Telegram",
         "site": "🌐 Сайт школы",
         "help": "Нажмите /test, чтобы пройти тест на уровень португальского.",
         "cmd_test": "Пройти тест",
-        "wa_text": "Здравствуйте! Прошёл(а) тест в Telegram, мой уровень — {level}. Хочу записаться на курс.",
+        "enroll_text": "Здравствуйте! Прошёл(а) тест в боте, мой уровень — {level}. Хочу записаться на курс.",
         "results": {
             "A0": ("A0 — начинающий",
                    "Вам отлично подойдёт <b>разговорный курс A1</b> для начинающих: научитесь говорить, "
@@ -130,14 +131,14 @@ TEXTS = {
         "start": "Start the test",
         "progress": "Question {i} of {n} · level {level}",
         "dont_know": "🤷 I don't know",
-        "score": "Correct answers: <b>{c} of {n}</b>",
-        "level": "Your level: <b>{level}</b>",
+        "score": "Correct answers: <b>{c}/{n}</b>",
+        "level": "Your Portuguese level: <b>{level}</b>",
         "again": "🔄 Try again",
-        "wa": "💬 Enroll via WhatsApp",
+        "enroll": "✍️ Enroll via Telegram",
         "site": "🌐 School website",
         "help": "Tap /test to take the Portuguese level test.",
         "cmd_test": "Take the test",
-        "wa_text": "Hello! I took the Telegram test, my level is {level}. I'd like to enroll in a course.",
+        "enroll_text": "Hello! I took the test in your bot, my level is {level}. I'd like to enroll in a course.",
         "results": {
             "A0": ("A0 — beginner",
                    "The <b>A1 conversation course</b> for beginners is a great fit: you'll learn to speak, "
@@ -202,10 +203,10 @@ def result_view(seed: int, bits: str, lang: str) -> tuple[str, InlineKeyboardMar
         f"{t['score'].format(c=bits.count('1'), n=TOTAL)}\n"
         f"{t['level'].format(level=title)}\n\n{advice}"
     )
-    wa_url = f"https://wa.me/{WA_PHONE}?text={quote(t['wa_text'].format(level=level))}"
+    enroll_url = f"https://t.me/{CONTACT_USERNAME}?text={quote(t['enroll_text'].format(level=level))}"
     site_url = SITE_URL + ("" if lang == "ru" else "?lang=en")
     kb = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=t["wa"], url=wa_url)],
+        [InlineKeyboardButton(text=t["enroll"], url=enroll_url)],
         [InlineKeyboardButton(text=t["site"], url=site_url)],
         [InlineKeyboardButton(text=t["again"], callback_data="go")],
     ])
