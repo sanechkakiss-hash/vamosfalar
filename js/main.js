@@ -115,6 +115,17 @@
     });
   });
 
+  /* ---------- logo scrolls to the very top ---------- */
+
+  // #top is the sticky header itself, so a plain anchor jump doesn't move the page
+  document.querySelector('.logo').addEventListener('click', function (e) {
+    e.preventDefault();
+    header.classList.remove('menu-open');
+    burger.setAttribute('aria-expanded', 'false');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+  });
+
   /* ---------- header shadow on scroll ---------- */
 
   function onScroll() { header.classList.toggle('is-scrolled', window.scrollY > 8); }
