@@ -122,7 +122,20 @@
     e.preventDefault();
     header.classList.remove('menu-open');
     burger.setAttribute('aria-expanded', 'false');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    var scroller = document.scrollingElement || document.documentElement;
+    if ('scrollBehavior' in document.documentElement.style) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      window.scrollTo(0, 0);
+    }
+    // some mobile browsers drop a smooth scroll during momentum scrolling — finish the job
+    setTimeout(function () {
+      if (scroller.scrollTop > 0 || window.pageYOffset > 0) {
+        window.scrollTo(0, 0);
+        scroller.scrollTop = 0;
+        document.body.scrollTop = 0;
+      }
+    }, 900);
     if (location.hash) history.replaceState(null, '', location.pathname + location.search);
   });
 
