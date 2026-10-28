@@ -240,6 +240,7 @@ button { font: inherit; cursor: pointer; }
 .about__numbers strong { display: block; font-size: 42px; font-weight: 700; line-height: 1; color: var(--primary); }
 .about__numbers span { display: block; margin-top: 6px; font-size: 14px; line-height: 1.35; color: var(--ink-soft); max-width: 150px; }
 .about__features { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.about__cta--mobile { display: none; }
 .tile {
   padding: 22px; border-radius: var(--radius-sm);
   background: #fff; border: 1px solid var(--line);
@@ -417,6 +418,9 @@ button { font: inherit; cursor: pointer; }
 }
 
 @media (max-width: 900px) {
+  .about__cta--desktop { display: none; }
+  .about__cta--mobile { display: block; grid-column: 1 / -1; margin-top: 8px; }
+  .individual__cta { display: flex; width: fit-content; margin: 0 auto; }
   :root { --header-h: 68px; }
   .header__inner { grid-template-columns: auto 1fr; }
   .nav--left, .nav--right { display: none; }
