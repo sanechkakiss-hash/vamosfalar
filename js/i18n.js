@@ -105,9 +105,6 @@ window.I18N = {
     'team.yolanda.bio': '<p>A native Portuguese speaker. She previously worked as a tutor for children in Angola. We don’t know which is the cause and which is the effect, but children adore her. She is the kind of person who easily connects with everyone, not only children.</p><p>Working with foreigners is a kind of challenge: at first it’s a bit like working with children — understanding comes, but not immediately. She loves seeing her students’ results and motivates them to keep going.</p><p>She explains things so clearly that everything makes sense, even when you don’t catch every word.</p>',
 
     'reviews.title': 'Join our graduates who already speak Portuguese confidently',
-    'reviews.stat1': 'students already speak Portuguese',
-    'reviews.stat2': 'people per group',
-    'reviews.stat3': 'months from zero to A2 with our program',
     'reviews.source': 'Avito',
     'reviews.r0.name': 'Olga',
     'reviews.r0.date': 'October 6, 2026',
