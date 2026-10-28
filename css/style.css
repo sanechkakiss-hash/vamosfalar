@@ -143,6 +143,8 @@ button { font: inherit; cursor: pointer; }
 }
 .audience__item:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(43, 45, 66, .12); }
 .audience__item img { order: -1; width: 100%; height: 340px; object-fit: cover; }
+/* keep heads in frame: anchor the photo to its top edge */
+.audience__item .audience__img--top { object-position: 50% 0; }
 .audience__item h3 { font-size: 18px; font-weight: 400; line-height: 1.4; padding: 22px 26px 26px; flex: 1; }
 
 /* ============ Courses ============ */
