@@ -23,7 +23,7 @@ window.I18N = {
     'nav.about': 'About us',
     'nav.reviews': 'Reviews',
     'nav.contacts': 'Contacts',
-    'logo.tagline': 'let’s speak Portuguese',
+    'logo.tagline': 'Online school of conversational Portuguese',
     'hero.eyebrow': 'Online conversational Portuguese courses with native speakers',
 
     'cta.findCourse': 'Find your course',
