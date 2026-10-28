@@ -22,7 +22,7 @@ assets/img/         — изображения
 
 ## Контакты / ссылки
 Номер WhatsApp задан в `js/main.js` (`WA_PHONE`) и в ссылках `index.html`.
-Telegram-бот теста: `https://t.me/vamosFalarBot` (код — в папке `bot/`, см. `bot/README.md`), Telegram в подвале: `https://t.me/vamos_falar`.
+Telegram-бот теста: `https://t.me/vamosFalarBot` (код — `bot/worker.js`, запуск на Cloudflare — см. `bot/README.md`), Telegram в подвале: `https://t.me/vamos_falar`.
 
 ## Фото команды
 Фото лежат в `assets/img/team-*.webp` (квадрат 360×360). Чтобы заменить — положите файл с тем же именем.

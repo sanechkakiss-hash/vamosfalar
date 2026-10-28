@@ -1,34 +1,33 @@
 # @vamosFalarBot — адаптивный тест на уровень португальского
 
+Весь бот — один файл `worker.js`, он работает бесплатно на Cloudflare Workers (свой сервер не нужен).
+
 Бот задаёт 15 вопросов. Первый — уровня A1; ответ верный — следующий вопрос на уровень
 сложнее, неверный (или «Не знаю») — на уровень проще. Итоговый уровень — самый высокий,
 на котором человек ответил хотя бы на 2 вопроса и правильно минимум на 60 % из них.
-В конце бот советует курс и даёт кнопку записи в Telegram (@dlologi, меняется переменной `CONTACT_USERNAME`), а вам присылает результат.
+В конце бот показывает «Верных ответов: N/15», уровень, советует курс и даёт кнопку записи
+в Telegram (@dlologi). Вам приходит сообщение с результатом.
 
-## Вопросы
-Все вопросы — в `questions.json`, по 30 на уровни `A1`, `A2`, `B1`, `B2`
-(формат как в исходной таблице: `question`, `options` A–D, `correct` — буква правильного варианта).
-Вопросы каждому выпадают в случайном порядке и не повторяются, варианты перемешиваются.
-Чтобы временно выключить вопрос, добавьте ему `"off": true`.
-Тексты рекомендаций — в `bot.py`, словарь `TEXTS` → `results`; число вопросов — `TOTAL`.
+## Запуск на Cloudflare (один раз, ~10 минут)
+1. **Токен.** Telegram → @BotFather → `/mybots` → vamosFalarBot → **API Token** → скопировать.
+2. **Ваш id** (для результатов). Написать @userinfobot → запомнить число `Id`. Нажать Start в @vamosFalarBot.
+3. **Аккаунт.** Зарегистрироваться на https://dash.cloudflare.com (бесплатно, нужна только почта).
+4. **Создать Worker.** Слева **Workers & Pages** → **Create** → **Start with Hello World!** →
+   имя `vamosfalar-bot` → **Deploy**.
+5. **Вставить код.** **Edit code** → удалить всё в редакторе → вставить содержимое `worker.js` → **Deploy**.
+6. **Токен в настройки.** Вернуться к воркеру → **Settings** → **Variables and Secrets** → **Add**:
+   - Type **Secret**, имя `BOT_TOKEN`, значение — токен из п. 1;
+   - Type **Text**, имя `ADMIN_CHAT_ID`, значение — число из п. 2.
 
-## Запуск
-1. Возьмите токен бота у [@BotFather](https://t.me/BotFather) (`/mybots` → vamosFalarBot → API Token).
-2. Узнайте свой chat id у [@userinfobot](https://t.me/userinfobot) — туда будут приходить результаты.
-3. Запустите на любом сервере/VPS:
+   Нажать **Deploy** (или **Save**).
+7. **Подключить бота.** Открыть в браузере адрес воркера с `/setup` на конце, например
+   `https://vamosfalar-bot.ВАШЕ-ИМЯ.workers.dev/setup`. Должно появиться «Готово! Бот @vamosFalarBot подключён».
+8. Открыть https://t.me/vamosFalarBot → Start → пройти тест.
 
-```bash
-cd bot
-python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
-BOT_TOKEN=123:ABC ADMIN_CHAT_ID=111111 .venv/bin/python bot.py
-```
+## Как поменять
+- **Вопросы** — в начале `worker.js`, блок `QUESTIONS` (формат как в таблице: `question`, `options` A–D,
+  `correct` — буква правильного варианта; `"off":true` выключает вопрос).
+- **Тексты, контакт для записи, число вопросов** — блок «НАСТРОЙКИ» в самом верху и `TEXTS`.
 
-или через Docker:
-
-```bash
-docker build -t vamosfalar-bot bot
-docker run -d --restart=always --name vamosfalar-bot -e BOT_TOKEN=123:ABC -e ADMIN_CHAT_ID=111111 vamosfalar-bot
-```
-
-Бот работает через long polling — нужен только исходящий интернет, домен и HTTPS не нужны.
-GitHub Pages ботов не запускает, поэтому нужен отдельный хостинг (VPS, Railway, Render, Fly.io и т.п.).
+После правки: Cloudflare → воркер → **Edit code** → вставить новый `worker.js` → **Deploy**.
+`/setup` повторять не нужно.

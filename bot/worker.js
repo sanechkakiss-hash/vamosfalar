@@ -1,4 +1,32 @@
-{
+// ================= НАСТРОЙКИ =================
+// Telegram, куда пишут для записи на курс (без @).
+const CONTACT_USERNAME = "dlologi";
+const SITE_URL = "https://vamosfalar.net/";
+const TOTAL = 15;        // сколько вопросов задаём
+const PASS_RATIO = 0.6;  // доля верных ответов, чтобы уровень засчитался
+const MIN_ASKED = 2;     // минимум вопросов на уровне, чтобы его засчитать
+// Токен (BOT_TOKEN) и id для результатов (ADMIN_CHAT_ID) задаются
+// в Cloudflare: Settings → Variables and Secrets, а не здесь.
+
+/*
+ * @vamosFalarBot — адаптивный тест на уровень португальского (Cloudflare Worker).
+ *
+ * 15 вопросов. Первый — уровня A1; верный ответ — следующий вопрос на уровень
+ * сложнее, неверный — на уровень проще. Итоговый уровень — самый высокий, на
+ * котором человек ответил на 2+ вопроса и правильно хотя бы на 60 % из них.
+ *
+ * Весь ход теста хранится прямо в кнопках (seed + строка верно/неверно),
+ * поэтому база данных не нужна.
+ *
+ * Адреса воркера:
+ *   /setup — один раз открыть в браузере: подключает бота к этому воркеру;
+ *   /      — сюда Telegram присылает сообщения.
+ */
+
+// ================= ВОПРОСЫ =================
+// По 30+ вопросов на уровень. correct — буква правильного варианта.
+// Чтобы выключить вопрос, добавьте ему "off":true.
+const QUESTIONS = {
   "A1": [
     {"id":1,"question":"_____ te chamas?","options":{"A":"Como","B":"Qual","C":"Quem","D":"Onde"},"correct":"A"},
     {"id":2,"question":"Ela _____ portuguesa.","options":{"A":"é","B":"está","C":"tem","D":"há"},"correct":"A"},
@@ -127,4 +155,311 @@
     {"id":29,"question":"A menos que _____ impedimento, estarei presente.","options":{"A":"há","B":"haja","C":"houvesse","D":"haverá"},"correct":"B"},
     {"id":30,"question":"Por muito que _____ estudado, ele não teria passado no exame.","options":{"A":"tivesse","B":"tinha","C":"tenha","D":"teria"},"correct":"A"}
   ]
+};
+
+const LEVELS = ["A1", "A2", "B1", "B2"];
+
+const TEXTS = {
+  ru: {
+    hello:
+      "Olá, {name}! 👋\n\n" +
+      "Это короткий тест на знание португальского от школы <b>VamosFalar</b>.\n" +
+      "{n} вопросов, около 3 минут. Тест подстраивается под вас: ответили верно — следующий " +
+      "вопрос сложнее, ошиблись — проще. Выбирайте вариант, который подходит в пропуск. " +
+      "Если не знаете ответ — нажмите «Не знаю», так результат будет точнее.",
+    start: "Начать тест",
+    progress: "Вопрос {i} из {n} · уровень {level}",
+    dont_know: "🤷 Не знаю",
+    score: "Верных ответов: <b>{c}/{n}</b>",
+    level: "Ваш уровень португальского: <b>{level}</b>",
+    again: "🔄 Пройти ещё раз",
+    enroll: "✍️ Записаться в Telegram",
+    site: "🌐 Сайт школы",
+    help: "Нажмите /test, чтобы пройти тест на уровень португальского.",
+    cmd_test: "Пройти тест",
+    enroll_text: "Здравствуйте! Прошёл(а) тест в боте, мой уровень — {level}. Хочу записаться на курс.",
+    results: {
+      A0: ["A0 — начинающий",
+        "Вам отлично подойдёт <b>разговорный курс A1</b> для начинающих: научитесь говорить, " +
+        "читать и писать на базовом португальском."],
+      A1: ["A1 — элементарный",
+        "Базу вы уже знаете. Рекомендуем <b>курс A2</b> для продолжающих: подтянете грамматику " +
+        "и словарный запас до среднего уровня."],
+      A2: ["A2 — предпороговый",
+        "Хороший уровень! Рекомендуем <b>разговорный клуб</b> и <b>индивидуальные занятия</b>, " +
+        "чтобы уверенно выйти на B1."],
+      B1: ["B1 — средний",
+        "Отличный результат! Для вас — <b>разговорный клуб</b> с носителями и " +
+        "<b>индивидуальные занятия</b> под ваши цели."],
+      B2: ["B2 и выше — продвинутый",
+        "Parabéns! 🎉 Вы свободно владеете языком. Поддерживайте форму в " +
+        "<b>разговорном клубе</b> или на <b>индивидуальных занятиях</b>."],
+    },
+  },
+  en: {
+    hello:
+      "Olá, {name}! 👋\n\n" +
+      "This is a short Portuguese level test by <b>VamosFalar</b> school.\n" +
+      "{n} questions, about 3 minutes. The test adapts to you: a right answer makes the next " +
+      "question harder, a wrong one — easier. Choose the option that fills the gap. " +
+      "If you don't know, tap “I don't know” — the result will be more accurate.",
+    start: "Start the test",
+    progress: "Question {i} of {n} · level {level}",
+    dont_know: "🤷 I don't know",
+    score: "Correct answers: <b>{c}/{n}</b>",
+    level: "Your Portuguese level: <b>{level}</b>",
+    again: "🔄 Try again",
+    enroll: "✍️ Enroll via Telegram",
+    site: "🌐 School website",
+    help: "Tap /test to take the Portuguese level test.",
+    cmd_test: "Take the test",
+    enroll_text: "Hello! I took the test in your bot, my level is {level}. I'd like to enroll in a course.",
+    results: {
+      A0: ["A0 — beginner",
+        "The <b>A1 conversation course</b> for beginners is a great fit: you'll learn to speak, " +
+        "read and write basic Portuguese."],
+      A1: ["A1 — elementary",
+        "You know the basics. We recommend the <b>A2 course</b> to bring your grammar and " +
+        "vocabulary up to intermediate level."],
+      A2: ["A2 — pre-intermediate",
+        "Good level! We recommend the <b>conversation club</b> and <b>private lessons</b> " +
+        "to reach B1 with confidence."],
+      B1: ["B1 — intermediate",
+        "Great result! The <b>conversation club</b> with native speakers and " +
+        "<b>private lessons</b> tailored to your goals are for you."],
+      B2: ["B2+ — advanced",
+        "Parabéns! 🎉 You speak fluently. Keep in shape at the <b>conversation club</b> " +
+        "or in <b>private lessons</b>."],
+    },
+  },
+};
+
+// ================= ВОПРОСЫ → ПУЛ =================
+// Одинаковые варианты склеиваются в одну кнопку; "off": true — вопрос не задаётся.
+const POOL = {};
+for (const level of LEVELS) {
+  POOL[level] = (QUESTIONS[level] || []).filter((q) => !q.off).map((q) => {
+    const options = [...new Set(Object.values(q.options))];
+    return { text: q.question, options, answer: options.indexOf(q.options[q.correct]) };
+  });
+  if (POOL[level].length < TOTAL) throw new Error(`на уровне ${level} нужно хотя бы ${TOTAL} вопросов`);
 }
+
+// Детерминированный генератор: один и тот же seed — один и тот же порядок.
+function rng(key) {
+  let h = 2166136261;
+  for (const ch of key) h = Math.imul(h ^ ch.charCodeAt(0), 16777619);
+  return () => {
+    h = (h + 0x6d2b79f5) | 0;
+    let t = Math.imul(h ^ (h >>> 15), 1 | h);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function shuffle(arr, key) {
+  const r = rng(key);
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(r() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// По seed и ответам ("1" верно, "0" нет) восстанавливает уровни заданных вопросов и следующий вопрос.
+function replay(seed, bits) {
+  const used = Object.fromEntries(LEVELS.map((l) => [l, 0]));
+  const levels = [];
+  let li = 0;
+  for (const b of bits) {
+    levels.push(LEVELS[li]);
+    used[LEVELS[li]]++;
+    li = b === "1" ? Math.min(li + 1, LEVELS.length - 1) : Math.max(li - 1, 0);
+  }
+  const level = LEVELS[li];
+  const order = shuffle([...POOL[level].keys()], `${seed}:${level}`);
+  return { levels, next: { ...POOL[level][order[used[level]]], level } };
+}
+
+function evaluate(seed, bits) {
+  const { levels } = replay(seed, bits);
+  const stats = Object.fromEntries(LEVELS.map((l) => [l, [0, 0]]));
+  levels.forEach((l, i) => {
+    stats[l][1]++;
+    if (bits[i] === "1") stats[l][0]++;
+  });
+  let reached = "A0";
+  for (const l of LEVELS) {
+    const [ok, asked] = stats[l];
+    if (asked >= MIN_ASKED && ok / asked >= PASS_RATIO) reached = l;
+  }
+  return { level: reached, stats };
+}
+
+// ================= СООБЩЕНИЯ =================
+const fmt = (s, vars) => s.replace(/\{(\w+)\}/g, (_, k) => vars[k]);
+const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+function langOf(user) {
+  return /^(ru|uk|be|kk)/.test((user && user.language_code) || "") ? "ru" : "en";
+}
+
+function questionView(seed, bits, lang) {
+  const t = TEXTS[lang];
+  const q = replay(seed, bits).next;
+  const progress = fmt(t.progress, { i: bits.length + 1, n: TOTAL, level: q.level });
+  const tag = `a:${seed}:${bits || "-"}`;
+  const rows = shuffle([...q.options.keys()], `${seed}:${bits}`)
+    .map((i) => [{ text: q.options[i], callback_data: `${tag}:${i}` }]);
+  rows.push([{ text: t.dont_know, callback_data: `${tag}:x` }]);
+  return {
+    text: `<i>${progress}</i>\n\n<b>${esc(q.text)}</b>`,
+    reply_markup: { inline_keyboard: rows },
+  };
+}
+
+function resultView(seed, bits, lang) {
+  const t = TEXTS[lang];
+  const { level, stats } = evaluate(seed, bits);
+  const [title, advice] = t.results[level];
+  const correct = [...bits].filter((b) => b === "1").length;
+  const enrollUrl = `https://t.me/${CONTACT_USERNAME}?text=${encodeURIComponent(fmt(t.enroll_text, { level }))}`;
+  const detail = LEVELS.filter((l) => stats[l][1]).map((l) => `${l} ${stats[l][0]}/${stats[l][1]}`).join(", ");
+  return {
+    text: `${fmt(t.score, { c: correct, n: TOTAL })}\n${fmt(t.level, { level: title })}\n\n${advice}`,
+    reply_markup: {
+      inline_keyboard: [
+        [{ text: t.enroll, url: enrollUrl }],
+        [{ text: t.site, url: SITE_URL + (lang === "ru" ? "" : "?lang=en") }],
+        [{ text: t.again, callback_data: "go" }],
+      ],
+    },
+    summary: `${level} (${correct}/${TOTAL}; ${detail})`,
+  };
+}
+
+// ================= TELEGRAM =================
+async function tg(env, method, body) {
+  const res = await fetch(`https://api.telegram.org/bot${env.BOT_TOKEN}/${method}`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  const data = await res.json();
+  if (!data.ok) console.log(method, JSON.stringify(data));
+  return data;
+}
+
+const newSeed = () => Math.floor(Math.random() * 10000);
+
+async function sendFirstQuestion(env, chatId, user) {
+  const view = questionView(newSeed(), "", langOf(user));
+  await tg(env, "sendMessage", { chat_id: chatId, parse_mode: "HTML", ...view });
+}
+
+async function onMessage(env, msg) {
+  const t = TEXTS[langOf(msg.from)];
+  const text = msg.text || "";
+  if (text.startsWith("/start")) {
+    await tg(env, "sendMessage", {
+      chat_id: msg.chat.id,
+      parse_mode: "HTML",
+      text: fmt(t.hello, { name: esc((msg.from && msg.from.first_name) || ""), n: TOTAL }),
+      reply_markup: { inline_keyboard: [[{ text: t.start, callback_data: "go" }]] },
+    });
+  } else if (text.startsWith("/test")) {
+    await sendFirstQuestion(env, msg.chat.id, msg.from);
+  } else {
+    await tg(env, "sendMessage", { chat_id: msg.chat.id, text: t.help });
+  }
+}
+
+async function onCallback(env, call) {
+  const lang = langOf(call.from);
+  const chatId = call.message.chat.id;
+  const messageId = call.message.message_id;
+  await tg(env, "answerCallbackQuery", { callback_query_id: call.id });
+
+  const parts = (call.data || "").split(":");
+  let seed, bits, q;
+  if (parts[0] === "a" && parts.length === 4) {
+    seed = Number(parts[1]);
+    bits = parts[2] === "-" ? "" : parts[2];
+    if (Number.isInteger(seed) && /^[01]*$/.test(bits) && bits.length < TOTAL) q = replay(seed, bits).next;
+  }
+  if (!q) {
+    // «Начать тест», «Пройти ещё раз» или кнопка от старой версии — начинаем заново.
+    await sendFirstQuestion(env, chatId, call.from);
+    return;
+  }
+
+  bits += parts[3] !== "x" && Number(parts[3]) === q.answer ? "1" : "0";
+  if (bits.length < TOTAL) {
+    const view = questionView(seed, bits, lang);
+    await tg(env, "editMessageText", { chat_id: chatId, message_id: messageId, parse_mode: "HTML", ...view });
+    return;
+  }
+
+  const { summary, ...view } = resultView(seed, bits, lang);
+  await tg(env, "editMessageText", { chat_id: chatId, message_id: messageId, parse_mode: "HTML", ...view });
+  if (env.ADMIN_CHAT_ID) {
+    const u = call.from;
+    let who = esc([u.first_name, u.last_name].filter(Boolean).join(" "));
+    if (u.username) who += ` (@${u.username})`;
+    await tg(env, "sendMessage", {
+      chat_id: env.ADMIN_CHAT_ID,
+      parse_mode: "HTML",
+      text: `📝 Тест пройден: <a href="tg://user?id=${u.id}">${who}</a>\nУровень: <b>${summary}</b>`,
+    });
+  }
+}
+
+// Секрет для проверки, что запрос пришёл именно от Telegram (выводится из токена).
+async function webhookSecret(env) {
+  const hash = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(env.BOT_TOKEN));
+  return [...new Uint8Array(hash)].slice(0, 16).map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+async function setup(env, url) {
+  const hook = await tg(env, "setWebhook", {
+    url: `${url.origin}/`,
+    secret_token: await webhookSecret(env),
+    allowed_updates: ["message", "callback_query"],
+    drop_pending_updates: true,
+  });
+  await tg(env, "setMyCommands", {
+    commands: [{ command: "test", description: TEXTS.ru.cmd_test }],
+    language_code: "ru",
+  });
+  await tg(env, "setMyCommands", { commands: [{ command: "test", description: TEXTS.en.cmd_test }] });
+  const me = await tg(env, "getMe", {});
+  if (!hook.ok) return `Ошибка: ${hook.description}. Проверьте BOT_TOKEN в Settings → Variables and Secrets.`;
+  return `Готово! Бот @${me.result.username} подключён. Откройте https://t.me/${me.result.username} и нажмите Start.`;
+}
+
+export default {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+    if (!env.BOT_TOKEN) {
+      return new Response("Не задан BOT_TOKEN: добавьте его в Settings → Variables and Secrets.", {
+        headers: { "content-type": "text/plain; charset=utf-8" },
+      });
+    }
+    if (request.method === "GET" && url.pathname === "/setup") {
+      return new Response(await setup(env, url), { headers: { "content-type": "text/plain; charset=utf-8" } });
+    }
+    if (request.method !== "POST") return new Response("VamosFalar bot is running.");
+    if (request.headers.get("X-Telegram-Bot-Api-Secret-Token") !== (await webhookSecret(env))) {
+      return new Response("forbidden", { status: 403 });
+    }
+    const update = await request.json();
+    try {
+      if (update.message) await onMessage(env, update.message);
+      else if (update.callback_query) await onCallback(env, update.callback_query);
+    } catch (e) {
+      console.log("error", e && e.stack);
+    }
+    return new Response("ok"); // всегда 200, иначе Telegram будет повторять запрос
+  },
+};
