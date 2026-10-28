@@ -1,0 +1,28 @@
+{
+  "_comment": "Черновой набор вопросов. Замените на свой список: у каждого вопроса level (A1/A2/B1/B2), text, options и answer — номер правильного варианта с нуля. Вариант «Не знаю» бот добавляет сам.",
+  "questions": [
+    {"level": "A1", "text": "Olá! Como ___ chamas?", "options": ["te", "se", "me", "lhe"], "answer": 0},
+    {"level": "A1", "text": "Eu ___ estudante.", "options": ["sou", "estou", "és", "é"], "answer": 0},
+    {"level": "A1", "text": "Nós ___ em Lisboa.", "options": ["moro", "moramos", "moram", "moras"], "answer": 1},
+    {"level": "A1", "text": "Quantos anos ___?", "options": ["tens", "és", "estás", "fazes"], "answer": 0},
+    {"level": "A1", "text": "Eles são ___ Brasil.", "options": ["de", "do", "da", "no"], "answer": 1},
+
+    {"level": "A2", "text": "Ontem eu ___ ao cinema.", "options": ["vou", "fui", "ia", "irei"], "answer": 1},
+    {"level": "A2", "text": "Quando era criança, ___ muito futebol.", "options": ["joguei", "jogava", "jogo", "jogarei"], "answer": 1},
+    {"level": "A2", "text": "Este livro é ___ interessante do que aquele.", "options": ["muito", "tão", "mais", "tanto"], "answer": 2},
+    {"level": "A2", "text": "Amanhã nós ___ visitar os nossos avós.", "options": ["vamos", "fomos", "íamos", "vão"], "answer": 0},
+    {"level": "A2", "text": "Já ___ o almoço? — Sim, já comi.", "options": ["comeste", "comias", "comes", "comerás"], "answer": 0},
+
+    {"level": "B1", "text": "Espero que tu ___ bem.", "options": ["estás", "estejas", "estarás", "estavas"], "answer": 1},
+    {"level": "B1", "text": "Se eu ___ dinheiro, comprava uma casa.", "options": ["tenho", "tivesse", "tiver", "tinha tido"], "answer": 1},
+    {"level": "B1", "text": "Quando ___ a Portugal, vou visitar o Porto.", "options": ["vou", "for", "fosse", "fui"], "answer": 1},
+    {"level": "B1", "text": "A carta ___ pelo diretor ontem.", "options": ["escreveu", "foi escrita", "está escrevendo", "tem escrito"], "answer": 1},
+    {"level": "B1", "text": "Ela disse que ___ cansada.", "options": ["está", "estava", "esteja", "estará"], "answer": 1},
+
+    {"level": "B2", "text": "Embora ___ tarde, decidimos sair.", "options": ["era", "fosse", "é", "seja sido"], "answer": 1},
+    {"level": "B2", "text": "Se tivesses estudado, ___ no exame.", "options": ["passavas", "terias passado", "passarás", "tinhas passado"], "answer": 1},
+    {"level": "B2", "text": "Para ___ bem-sucedidos, temos de trabalhar mais.", "options": ["sermos", "ser", "sejamos", "somos"], "answer": 0},
+    {"level": "B2", "text": "Não conheço ninguém que ___ falar japonês.", "options": ["sabe", "saiba", "saberá", "soubera"], "answer": 1},
+    {"level": "B2", "text": "Mal ___ a notícia, ligou-me.", "options": ["soube", "saiba", "sabia", "souber"], "answer": 0}
+  ]
+}
