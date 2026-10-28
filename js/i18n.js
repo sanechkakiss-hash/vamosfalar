@@ -44,21 +44,21 @@ window.I18N = {
 
     'courses.a1.title': 'Conversational course A1 online for beginners',
     'courses.a1.list': '<li>learn to speak, read and write basic Portuguese</li><li>understand and use common everyday expressions</li><li>learn the essential grammar</li>',
-    'courses.a1.price': '9,999 RUB / month',
-    'courses.a1.duration': '3 months, 3 times a week',
+    'courses.a1.price': '€110 / mo',
+    'courses.a1.duration': '3 mo, 3×/week',
     'courses.a1.wa': 'Hello! I would like to sign up for the A1 conversational course for beginners.',
 
     'courses.a2.title': 'Conversational course A2 online for continuing learners',
     'courses.a2.list': '<li>bring your grammar and vocabulary up to intermediate level</li><li>feel confident in most everyday situations</li>',
-    'courses.a2.price': '9,999 RUB / month',
-    'courses.a2.duration': '3 months, 3 times a week',
+    'courses.a2.price': '€110 / mo',
+    'courses.a2.duration': '3 mo, 3×/week',
     'courses.a2.wa': 'Hello! I would like to sign up for the A2 conversational course.',
 
     'courses.club.badge': 'Club',
     'courses.club.title': 'Conversation club for continuing learners',
     'courses.club.list': '<li>take part in debates in Portuguese</li><li>practise with native speakers and fellow students</li><li>listening and speaking practice</li><li>new topics to discuss every time</li>',
-    'courses.club.price': '3,490 RUB / month',
-    'courses.club.duration': '1 month, once a week',
+    'courses.club.price': '€35 / mo',
+    'courses.club.duration': '1×/week',
     'courses.club.wa': 'Hello! I would like to join the conversation club.',
 
     'test.title': 'Take a short Portuguese level test in Telegram',

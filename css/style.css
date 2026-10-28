@@ -162,7 +162,7 @@ button { font: inherit; cursor: pointer; }
 .card__meta { margin: 0 0 26px; display: grid; gap: 14px; }
 .card__meta > div { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
 .card__meta dt { display: flex; align-items: center; gap: 12px; text-transform: uppercase; font-size: 14px; }
-.card__meta dd { margin: 0; font-size: 14px; text-align: right; font-weight: 500; }
+.card__meta dd { margin: 0; font-size: 14px; text-align: right; font-weight: 500; white-space: nowrap; }
 
 /* ============ Telegram test ============ */
 .test {
@@ -232,8 +232,6 @@ button { font: inherit; cursor: pointer; }
   object-fit: cover;
   border: 4px solid #fff; box-shadow: 0 0 0 3px var(--gold);
 }
-.person__avatar--green { background: var(--green); }
-.person__avatar--red { background: var(--red); }
 .person__name { font-size: 22px; font-weight: 600; }
 .person__role { color: var(--ink-soft); font-size: 14px; margin-top: 4px; }
 .person__bio {

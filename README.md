@@ -25,6 +25,4 @@ assets/img/         — изображения
 Telegram-бот теста: `https://t.me/vamosFalarBot`.
 
 ## Фото команды
-Сейчас вместо фото — цветные аватары с инициалами. Положите фото в `assets/img/`
-и замените `<div class="person__avatar">…</div>` на
-`<img class="person__avatar" src="assets/img/имя.jpg" alt="">`.
+Фото лежат в `assets/img/team-*.jpg` (квадрат 360×360). Чтобы заменить — положите файл с тем же именем.
