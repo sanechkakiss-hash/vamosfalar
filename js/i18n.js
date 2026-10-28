@@ -75,6 +75,7 @@ window.I18N = {
     'about.lead': 'We don’t teach “textbook Portuguese” — we teach the living language people speak on the street, in cafés and at the office. From the very first lesson: live practice with native speakers — fully in Portuguese or with explanations in English, whichever suits you.',
     'about.n1': 'students already speaking',
     'about.n2': 'people per group',
+    'about.n3': 'countries our students come from',
     'about.f1': 'Native-speaker teachers',
     'about.f1s': 'Real pronunciation and real everyday phrases',
     'about.f2': 'Your choice of format',
