@@ -361,17 +361,21 @@ button { font: inherit; cursor: pointer; }
 }
 .final__card {
   width: min(600px, 100%); text-align: center;
-  background: rgba(255, 255, 255, .82);
-  backdrop-filter: blur(6px);
+  background: rgba(255, 255, 255, .55);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  backdrop-filter: blur(12px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, .6);
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(20, 20, 50, .12);
   padding: 30px 24px;
 }
 .final__card h2 { font-size: clamp(20px, 2.2vw, 24px); font-weight: 500; }
-.final__card .btn { margin-top: 22px; }
-/* On wide screens the card sits exactly over the frosted panel baked into the photo */
+.final__card .btn { margin-top: 22px; letter-spacing: .02em; }
+/* On wide screens the card covers the softened area in the middle of the photo */
 @media (min-width: 1000px) {
   .final { position: relative; aspect-ratio: 996 / 288; min-height: 0; padding: 0; display: block; }
   .final__card {
-    position: absolute; left: 18.9%; top: 10.4%; width: 58.4%; height: 65.6%;
+    position: absolute; left: 17%; top: 7%; width: 62%; height: 72%;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     padding: 16px 24px;
   }

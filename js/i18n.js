@@ -146,7 +146,6 @@ window.I18N = {
     'faq.a5': 'Message us on WhatsApp — we will suggest the right course and the nearest group.',
 
     'final.title': 'To enroll in a course, message us on WhatsApp',
-    'final.cta': 'Go to WhatsApp',
     'final.note': 'We will reply shortly',
 
     'footer.rights': 'Online school of conversational Portuguese'
