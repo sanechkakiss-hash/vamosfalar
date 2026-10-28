@@ -10,7 +10,7 @@
 
 ## Запуск на Cloudflare (один раз, ~10 минут)
 1. **Токен.** Telegram → @BotFather → `/mybots` → vamosFalarBot → **API Token** → скопировать.
-2. **Ваш id** (для результатов). Написать @userinfobot → запомнить число `Id`. Нажать Start в @vamosFalarBot.
+2. **Ваш id** (для результатов). Написать @userinfobot → скопировать число `Id` (оно понадобится в п. 6 как `ADMIN_CHAT_ID`). Нажать Start в @vamosFalarBot.
 3. **Аккаунт.** Зарегистрироваться на https://dash.cloudflare.com (бесплатно, нужна только почта).
 4. **Создать Worker.** Слева **Workers & Pages** → **Create** → **Start with Hello World!** →
    имя `vamosfalar-bot` → **Deploy**.
@@ -19,7 +19,7 @@
    - Type **Secret**, имя `BOT_TOKEN`, значение — токен из п. 1;
    - Type **Text**, имя `ADMIN_CHAT_ID`, значение — число из п. 2.
 
-   Нажать **Deploy** (или **Save**).
+   Нажать **Deploy** (или **Save**). Без `ADMIN_CHAT_ID` тест работает, но результаты вам не приходят.
 7. **Подключить бота.** Открыть в браузере адрес воркера с `/setup` на конце, например
    `https://vamosfalar-bot.ВАШЕ-ИМЯ.workers.dev/setup`. Должно появиться «Готово! Бот @vamosFalarBot подключён».
 8. Открыть https://t.me/vamosFalarBot → Start → пройти тест.
