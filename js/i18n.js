@@ -23,7 +23,7 @@ window.I18N = {
     'nav.about': 'About us',
     'nav.reviews': 'Reviews',
     'nav.contacts': 'Contacts',
-    'logo.tagline': 'Portuguese school',
+    'logo.tagline': 'let’s speak Portuguese',
     'hero.eyebrow': 'Online conversational Portuguese courses with native speakers',
 
     'cta.findCourse': 'Find your course',
@@ -108,8 +108,7 @@ window.I18N = {
     'reviews.title': 'Join our graduates who already speak Portuguese confidently',
     'reviews.stat1': 'students already speak Portuguese',
     'reviews.stat2': 'people per group',
-    'reviews.stat3': 'from zero to A2 with our program',
-    'reviews.stat3num': '6 mo',
+    'reviews.stat3': 'months from zero to A2 with our program',
     'reviews.source': 'Avito',
     'reviews.r0.name': 'Olga',
     'reviews.r0.date': 'October 2026',
