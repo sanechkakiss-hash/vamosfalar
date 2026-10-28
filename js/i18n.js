@@ -26,7 +26,7 @@ window.I18N = {
     'logo.tagline': 'Online Portuguese school<br>with native speakers',
 
     'cta.findCourse': 'Find your course',
-    'cta.request': 'Submit a request',
+    'cta.wa': 'Message us on WhatsApp: +244 943 090 008',
 
     'hero.title': 'Feel at home in Portugal',
     'hero.subtitle': 'Live, communicate, make friends. <br>Together we will overcome the language barrier',
