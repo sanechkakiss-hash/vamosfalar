@@ -133,12 +133,16 @@ button { font: inherit; cursor: pointer; }
 /* ============ Audience ============ */
 
 .audience__grid {
-  display: grid; grid-template-columns: 1fr 1.5fr 1fr; gap: 26px; margin-top: 26px;
+  display: grid; grid-template-columns: 1fr 1.5fr 1fr; gap: 26px; margin-top: 36px;
 }
-.audience__item { display: flex; flex-direction: column; }
-.audience__item h3 { font-size: 19px; font-weight: 400; text-align: center; min-height: 6.25em; display: flex; align-items: flex-end; justify-content: center; padding: 0 6px 16px; }
-.audience__item img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 6px; flex: 1; }
-.audience__item--wide img { aspect-ratio: auto; height: 100%; }
+.audience__item {
+  display: flex; flex-direction: column;
+  background: #fff; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden;
+  box-shadow: var(--shadow); transition: transform .25s, box-shadow .25s;
+}
+.audience__item:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(20, 20, 50, .12); }
+.audience__item img { order: -1; width: 100%; height: 340px; object-fit: cover; }
+.audience__item h3 { font-size: 18px; font-weight: 400; line-height: 1.4; padding: 22px 26px 26px; flex: 1; }
 
 /* ============ Courses ============ */
 .courses { padding-bottom: 0; }
@@ -436,8 +440,7 @@ button { font: inherit; cursor: pointer; }
 
   .section { padding: 60px 0; }
   .audience__grid { grid-template-columns: 1fr; max-width: 520px; margin-left: auto; margin-right: auto; }
-  .audience__item h3 { min-height: 0; }
-  .audience__item img, .audience__item--wide img { aspect-ratio: 4 / 3; height: auto; }
+  .audience__item img { height: auto; aspect-ratio: 4 / 3; }
 
   .courses__grid { grid-template-columns: 1fr; max-width: 460px; }
   .about__inner { grid-template-columns: 1fr; gap: 36px; }
