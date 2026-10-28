@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://sanechkakiss-hash.github.io/vamosfalar/</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://sanechkakiss-hash.github.io/vamosfalar/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://sanechkakiss-hash.github.io/vamosfalar/?lang=en"/>
+    <loc>https://vamosfalar.net/</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vamosfalar.net/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vamosfalar.net/?lang=en"/>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://sanechkakiss-hash.github.io/vamosfalar/?lang=en</loc>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://sanechkakiss-hash.github.io/vamosfalar/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://sanechkakiss-hash.github.io/vamosfalar/?lang=en"/>
+    <loc>https://vamosfalar.net/?lang=en</loc>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://vamosfalar.net/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vamosfalar.net/?lang=en"/>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>

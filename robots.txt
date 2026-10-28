@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://sanechkakiss-hash.github.io/vamosfalar/sitemap.xml
+Sitemap: https://vamosfalar.net/sitemap.xml

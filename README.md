@@ -37,4 +37,4 @@ Telegram-бот теста: `https://t.me/vamosFalarBot`, Telegram в подва
 - Заголовок, описание и ключевые слова — в `<head>` файла `index.html`.
 - Структурированные данные (школа, курсы с ценами, частые вопросы) — блок `application/ld+json` там же.
 - `robots.txt` и `sitemap.xml` — в корне. Если подключите свой домен, замените в них и в `<head>`
-  адрес `https://sanechkakiss-hash.github.io/vamosfalar/` на новый.
+  адрес `https://vamosfalar.net/` на новый.
