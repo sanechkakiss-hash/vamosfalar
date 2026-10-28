@@ -155,7 +155,8 @@ button { font: inherit; cursor: pointer; }
   transition: transform .25s, box-shadow .25s;
 }
 .card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(20, 20, 50, .12); }
-.card__img { width: 100%; aspect-ratio: 330 / 190; object-fit: cover; }
+.card__img { width: 100%; height: auto; aspect-ratio: 330 / 190; object-fit: cover; }
+.card__img--contain { object-fit: contain; background: #f4eae4; }
 .card__body { padding: 22px 30px 30px; display: flex; flex-direction: column; flex: 1; position: relative; }
 .card__badge {
   position: absolute; top: -18px; right: 24px;
