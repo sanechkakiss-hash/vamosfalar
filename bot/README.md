@@ -17,12 +17,14 @@
 5. **Вставить код.** **Edit code** → удалить всё в редакторе → вставить содержимое `worker.js` → **Deploy**.
 6. **Токен в настройки.** Вернуться к воркеру → **Settings** → **Variables and Secrets** → **Add**:
    - Type **Secret**, имя `BOT_TOKEN`, значение — токен из п. 1;
-   - Type **Text**, имя `ADMIN_CHAT_ID`, значение — число из п. 2.
+   - Type **Text**, имя `ADMIN_CHAT_ID`, значение — число из п. 2 (или впишите его в `worker.js`, константа `ADMIN_CHAT_ID`).
+
+   Важно: переключатель над списком должен стоять на **Production**, а не на **Previews Base**.
 
    Нажать **Deploy** (или **Save**). Без `ADMIN_CHAT_ID` тест работает, но результаты вам не приходят.
 7. **Подключить бота.** Открыть в браузере адрес воркера с `/setup` на конце, например
    `https://vamosfalar-bot.ВАШЕ-ИМЯ.workers.dev/setup`. Должно появиться «Готово! Бот @vamosFalarBot подключён».
-8. Открыть https://t.me/vamosFalarBot → Start → пройти тест.
+8. Открыть https://t.me/vamosFalarBot → Start → пройти тест. Проверить отправку результатов: открыть адрес воркера с `/check` на конце.
 
 ## Как поменять
 - **Вопросы** — в начале `worker.js`, блок `QUESTIONS` (формат как в таблице: `question`, `options` A–D,

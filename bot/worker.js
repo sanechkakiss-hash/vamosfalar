@@ -2,11 +2,13 @@
 // Telegram, куда пишут для записи на курс (без @).
 const CONTACT_USERNAME = "dlologi";
 const SITE_URL = "https://vamosfalar.net/";
+// Куда присылать результаты тестов (ваш Id из @userinfobot).
+// Если в Cloudflare задана переменная ADMIN_CHAT_ID, берётся она.
+const ADMIN_CHAT_ID = "383574295";
 const TOTAL = 15;        // сколько вопросов задаём
 const PASS_RATIO = 0.6;  // доля верных ответов, чтобы уровень засчитался
 const MIN_ASKED = 2;     // минимум вопросов на уровне, чтобы его засчитать
-// Токен (BOT_TOKEN) и id для результатов (ADMIN_CHAT_ID) задаются
-// в Cloudflare: Settings → Variables and Secrets, а не здесь.
+// Токен (BOT_TOKEN) задаётся в Cloudflare: Settings → Variables and Secrets, а не здесь.
 
 /*
  * @vamosFalarBot — адаптивный тест на уровень португальского (Cloudflare Worker).
@@ -20,6 +22,7 @@ const MIN_ASKED = 2;     // минимум вопросов на уровне, �
  *
  * Адреса воркера:
  *   /setup — один раз открыть в браузере: подключает бота к этому воркеру;
+ *   /check — проверка: присылает тестовое сообщение туда, куда идут результаты;
  *   /      — сюда Telegram присылает сообщения.
  */
 
@@ -403,16 +406,31 @@ async function onCallback(env, call) {
 
   const { summary, ...view } = resultView(seed, bits, lang);
   await tg(env, "editMessageText", { chat_id: chatId, message_id: messageId, parse_mode: "HTML", ...view });
-  if (env.ADMIN_CHAT_ID) {
+  if (adminChat(env)) {
     const u = call.from;
     let who = esc([u.first_name, u.last_name].filter(Boolean).join(" "));
     if (u.username) who += ` (@${u.username})`;
     await tg(env, "sendMessage", {
-      chat_id: env.ADMIN_CHAT_ID,
+      chat_id: adminChat(env),
       parse_mode: "HTML",
       text: `📝 Тест пройден: <a href="tg://user?id=${u.id}">${who}</a>\nУровень: <b>${summary}</b>`,
     });
   }
+}
+
+const adminChat = (env) => String(env.ADMIN_CHAT_ID || ADMIN_CHAT_ID).trim();
+
+async function check(env) {
+  const chat = adminChat(env);
+  if (!chat) return "ADMIN_CHAT_ID не задан — результаты никуда не отправляются.";
+  const res = await tg(env, "sendMessage", { chat_id: chat, text: "✅ Проверка: сюда будут приходить результаты тестов." });
+  if (res.ok) return `Готово! Тестовое сообщение отправлено в чат ${chat} — проверьте Telegram.`;
+  if (res.error_code === 403 || /chat not found/i.test(res.description || "")) {
+    return `Telegram не даёт написать в чат ${chat} (${res.description}). ` +
+      "Откройте бота с того аккаунта, чей это Id, нажмите Start и откройте /check ещё раз. " +
+      "Если не помогло — проверьте, что Id правильный (@userinfobot).";
+  }
+  return `Ошибка Telegram для чата ${chat}: ${res.description}`;
 }
 
 // Секрет для проверки, что запрос пришёл именно от Telegram (выводится из токена).
@@ -445,6 +463,9 @@ export default {
       return new Response("Не задан BOT_TOKEN: добавьте его в Settings → Variables and Secrets.", {
         headers: { "content-type": "text/plain; charset=utf-8" },
       });
+    }
+    if (request.method === "GET" && url.pathname === "/check") {
+      return new Response(await check(env), { headers: { "content-type": "text/plain; charset=utf-8" } });
     }
     if (request.method === "GET" && url.pathname === "/setup") {
       return new Response(await setup(env, url), { headers: { "content-type": "text/plain; charset=utf-8" } });
