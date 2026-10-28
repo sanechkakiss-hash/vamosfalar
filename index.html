@@ -50,7 +50,7 @@
         "sameAs": ["https://t.me/vamosFalarBot", "https://wa.me/244943090008"],
         "knowsLanguage": ["pt", "ru", "en"],
         "founder": { "@type": "Person", "name": "Дарья Лоложи" },
-        "aggregateRating": { "@type": "AggregateRating", "ratingValue": "5", "bestRating": "5", "reviewCount": "5" }
+        "aggregateRating": { "@type": "AggregateRating", "ratingValue": "5", "bestRating": "5", "reviewCount": "6" }
       },
       {
         "@type": "Course",
@@ -172,7 +172,7 @@
   </section>
 
   <!-- ============ COURSES ============ -->
-  <section class="section courses" id="courses">
+  <section class="section section--rule courses" id="courses">
     <div class="container">
       <h2 class="section__title" data-i18n="courses.title">Базовый португальский для жизни</h2>
       <p class="section__lead" data-i18n="courses.lead">Для тех, кто переезжает в португалоязычную страну и хочет в короткие сроки начать говорить. <br>Онлайн-уроки с носителями языка в небольших группах разговорят даже самых стеснительных</p>
@@ -254,7 +254,8 @@
 
   <!-- ============ INDIVIDUAL ============ -->
   <section class="section individual" id="services">
-    <div class="container individual__inner reveal">
+    <div class="container">
+      <div class="panel individual__inner reveal">
       <div class="individual__text">
         <p class="eyebrow" data-i18n="individual.eyebrow">Индивидуальные занятия</p>
         <h2 class="section__title section__title--left" data-i18n="individual.title">Для тех, кому важен индивидуальный результат</h2>
@@ -272,12 +273,14 @@
         <div class="bubble bubble--2">Tudo ótimo, obrigado!</div>
         <div class="bubble bubble--3">Vamos falar? 🇵🇹</div>
       </div>
+      </div>
     </div>
   </section>
 
   <!-- ============ ABOUT ============ -->
   <section class="section about" id="about">
-    <div class="container about__inner">
+    <div class="container">
+      <div class="panel panel--dark about__inner">
       <div class="about__intro reveal">
         <p class="eyebrow eyebrow--light" data-i18n="about.eyebrow">Почему VamosFalar</p>
         <h2 class="about__title" data-i18n="about.title">О школе VamosFalar</h2>
@@ -295,6 +298,7 @@
         <div class="tile reveal"><span class="tile__ico tile__ico--green"><svg class="ico"><use href="#i-chat"/></svg></span><h3 data-i18n="about.f4">Чаты с группой и преподавателем</h3><p data-i18n="about.f4s">Практика и поддержка между занятиями</p></div>
         <div class="tile reveal"><span class="tile__ico tile__ico--red"><svg class="ico"><use href="#i-tag"/></svg></span><h3 data-i18n="about.f5">Доступные цены</h3><p data-i18n="about.f5s">И скидки для наших учеников</p></div>
         <div class="tile reveal"><span class="tile__ico tile__ico--gold"><svg class="ico"><use href="#i-book"/></svg></span><h3 data-i18n="about.f6">Качественные материалы</h3><p data-i18n="about.f6s">Всё нужное для урока и самостоятельной практики</p></div>
+      </div>
       </div>
     </div>
   </section>
@@ -344,7 +348,7 @@
   </section>
 
   <!-- ============ REVIEWS ============ -->
-  <section class="section reviews" id="reviews">
+  <section class="section section--rule reviews" id="reviews">
     <div class="container">
       <h2 class="section__title" data-i18n="reviews.title">Присоединяйтесь к нашим выпускникам, которые уже уверенно говорят на португальском</h2>
 
@@ -361,6 +365,18 @@
           быть уникальным; английский перевод — в js/i18n.js с теми же ключами.
         -->
         <div class="slider__track" tabindex="0" aria-label="Отзывы" data-i18n-attr="aria-label:reviews.aria">
+          <figure class="review">
+            <div class="review__head">
+              <div class="review__avatar" aria-hidden="true">О</div>
+              <div>
+                <div class="review__name" data-i18n="reviews.r0.name">Ольга</div>
+                <time class="review__date" datetime="2026-10" data-i18n="reviews.r0.date">октябрь 2026</time>
+              </div>
+              <span class="review__source">WhatsApp</span>
+            </div>
+            <div class="review__stars" aria-label="5/5">★★★★★</div>
+            <blockquote class="review__text" data-i18n="reviews.r0.text">Очень довольны занятиями! Учимся у него всей семьёй, поэтому можем оценить его подход и к подросткам, и ко взрослым. Он весёлый, доброжелательный, легко находит общий язык с учениками, говорит на английском и немного на русском, всегда учитывает интересы и пожелания. За 10 месяцев с нуля подготовил к школьным экзаменам на португальском языке — без зубрёжки и огромного количества домашних заданий. Со взрослыми тоже отличный результат: стало гораздо легче говорить и понимать португальский в обычной жизни. При этом занятия проходят легко и интересно. Очень рекомендуем!</blockquote>
+          </figure>
           <figure class="review">
             <div class="review__head">
               <div class="review__avatar" aria-hidden="true">М</div>
@@ -434,7 +450,7 @@
   </section>
 
   <!-- ============ FAQ ============ -->
-  <section class="section faq" id="faq">
+  <section class="section section--rule faq" id="faq">
     <div class="container faq__inner">
       <h2 class="section__title" data-i18n="faq.title">Частые вопросы</h2>
       <details class="faq__item">
