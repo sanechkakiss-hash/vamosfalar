@@ -23,14 +23,13 @@ window.I18N = {
     'nav.about': 'About us',
     'nav.reviews': 'Reviews',
     'nav.contacts': 'Contacts',
-    'logo.tagline': 'Online school of conversational Portuguese',
-    'hero.eyebrow': 'Online conversational Portuguese courses with native speakers',
+    'logo.tagline': 'Online Portuguese school<br>with native speakers',
 
     'cta.findCourse': 'Find your course',
     'cta.request': 'Submit a request',
 
     'hero.title': 'Feel at home in Portugal',
-    'hero.subtitle': 'Live, communicate, start interesting friendships. <br>Together we will overcome the language barrier',
+    'hero.subtitle': 'Live, communicate, make friends. <br>Together we will overcome the language barrier',
     'hero.imgAlt': 'A man and a woman cheerfully chatting on the street',
 
     'audience.title': 'Who is it for?',
