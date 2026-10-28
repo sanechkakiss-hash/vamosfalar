@@ -69,7 +69,7 @@ window.I18N = {
     'individual.eyebrow': 'Private lessons',
     'individual.title': 'For those who value individual results',
     'individual.lead': 'A path to your goal, tailored just for you.',
-    'individual.list': '<li>Personal schedule</li><li>Topics that match your goals</li><li>Custom programs</li><li>Any teacher of your choice</li>',
+    'individual.list': '<li>Personal schedule</li><li>Topics that match your goals</li><li>Custom programs</li><li>Any teacher of your choice</li><li>Your own group of 2 or more — study together with friends, family or colleagues</li>',
     'individual.wa': 'Hello! I am interested in private Portuguese lessons.',
 
     'about.eyebrow': 'Why VamosFalar',
@@ -140,7 +140,7 @@ window.I18N = {
     'faq.q3': 'How much does it cost?',
     'faq.a3': 'A1 and A2 courses are €110 per month, the conversation club is €35 per month. Private lessons are priced on request via WhatsApp.',
     'faq.q4': 'Do you offer private lessons?',
-    'faq.a4': 'Yes: a personal schedule, topics and program tailored to your goals, and any teacher of your choice.',
+    'faq.a4': 'Yes: a personal schedule, topics and program tailored to your goals, and any teacher of your choice. You can also form your own group of 2 or more people — friends, family or colleagues — and study together.',
     'faq.q6': 'Do I need to know English?',
     'faq.a6': 'No, it’s not required. You choose the format: fully in Portuguese or with explanations in English. Many of our students started without English and understood Portuguese better with every lesson. If you do have basic English, it’s easier to go over tricky points — our teachers know only a few words of Russian.',
     'faq.q5': 'How do I sign up?',
