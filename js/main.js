@@ -137,6 +137,49 @@
     revealEls.forEach(function (el) { io.observe(el); });
   }
 
+  /* ---------- reviews slider ---------- */
+
+  document.querySelectorAll('[data-slider]').forEach(function (slider) {
+    var track = slider.querySelector('.slider__track');
+    var slides = track.children;
+    var dotsBox = slider.querySelector('.slider__dots');
+    var dots = [];
+
+    for (var i = 0; i < slides.length; i++) {
+      var dot = document.createElement('span');
+      dotsBox.appendChild(dot);
+      dots.push(dot);
+    }
+
+    function step() {
+      var gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+      return slides[0].getBoundingClientRect().width + gap;
+    }
+
+    function update() {
+      var fits = track.scrollWidth <= track.clientWidth + 2;
+      slider.classList.toggle('is-static', fits);
+      var index = Math.round(track.scrollLeft / step());
+      // at the far right the last slide is "current" even if it can't snap to the left edge
+      if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 2) index = slides.length - 1;
+      dots.forEach(function (d, n) { d.classList.toggle('is-active', n === index); });
+    }
+
+    slider.querySelectorAll('.slider__btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var dir = Number(btn.getAttribute('data-dir'));
+        var atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 2;
+        if (dir > 0 && atEnd) track.scrollTo({ left: 0, behavior: 'smooth' });
+        else if (dir < 0 && track.scrollLeft <= 2) track.scrollTo({ left: track.scrollWidth, behavior: 'smooth' });
+        else track.scrollBy({ left: dir * step(), behavior: 'smooth' });
+      });
+    });
+
+    track.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  });
+
   document.getElementById('year').textContent = new Date().getFullYear();
 
   setLang(initialLang());
