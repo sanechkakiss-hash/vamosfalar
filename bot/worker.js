@@ -5,19 +5,18 @@ const SITE_URL = "https://vamosfalar.net/";
 // Куда присылать результаты тестов (ваш Id из @userinfobot).
 // Если в Cloudflare задана переменная ADMIN_CHAT_ID, берётся она.
 const ADMIN_CHAT_ID = "383574295";
-const TOTAL = 15;        // сколько вопросов задаём
-const PASS_RATIO = 0.6;  // доля верных ответов, чтобы уровень засчитался
-const MIN_ASKED = 2;     // минимум вопросов на уровне, чтобы его засчитать
+const PER_LEVEL = 15;    // сколько вопросов задаём на каждом уровне
+const PASS_RATIO = 0.8;  // доля верных ответов, чтобы уровень подтвердился (0.8 = 12 из 15)
 // Токен (BOT_TOKEN) задаётся в Cloudflare: Settings → Variables and Secrets, а не здесь.
 
 /*
- * @vamosFalarBot — адаптивный тест на уровень португальского (Cloudflare Worker).
+ * @vamosFalarBot — тест на уровень португальского по ступеням (Cloudflare Worker).
  *
- * 15 вопросов. Первый — уровня A1; верный ответ — следующий вопрос на уровень
- * сложнее, неверный — на уровень проще. Итоговый уровень — самый высокий, на
- * котором человек ответил на 2+ вопроса и правильно хотя бы на 60 % из них.
+ * Сначала 15 вопросов уровня A1. Если верно 80 % и больше — уровень A1
+ * подтверждён, и бот предлагает пройти A2 (снова 15 вопросов), и так до B2.
+ * Если меньше 80 % — тест заканчивается на последнем подтверждённом уровне.
  *
- * Весь ход теста хранится прямо в кнопках (seed + строка верно/неверно),
+ * Весь ход теста хранится прямо в кнопках (уровень + seed + строка верно/неверно),
  * поэтому база данных не нужна.
  *
  * Адреса воркера:
@@ -166,16 +165,22 @@ const TEXTS = {
   ru: {
     hello:
       "Olá, {name}! 👋\n\n" +
-      "Это короткий тест на знание португальского от школы <b>VamosFalar</b>.\n" +
-      "{n} вопросов, около 3 минут. Тест подстраивается под вас: ответили верно — следующий " +
-      "вопрос сложнее, ошиблись — проще. Выбирайте вариант, который подходит в пропуск. " +
-      "Если не знаете ответ — нажмите «Не знаю», так результат будет точнее.",
-    start: "Начать тест",
-    progress: "Вопрос {i} из {n} · уровень {level}",
+      "Это тест на знание португальского от школы <b>VamosFalar</b>.\n\n" +
+      "Начнём с уровня <b>A1</b>: {n} вопросов, около 3 минут. Ответите верно на {pass} и больше — " +
+      "уровень подтверждён, и можно перейти к следующему (A2, B1, B2).\n\n" +
+      "Выбирайте вариант, который подходит в пропуск. Если не знаете ответ — нажмите «Не знаю», " +
+      "так результат будет точнее.",
+    start: "Начать тест A1",
+    progress: "Уровень {level} · вопрос {i} из {n}",
     dont_know: "🤷 Не знаю",
     score: "Верных ответов: <b>{c}/{n}</b>",
-    level: "Ваш уровень португальского: <b>{level}</b>",
-    again: "🔄 Пройти ещё раз",
+    passed: "✅ Уровень <b>{level}</b> подтверждён!",
+    offer: "Хотите проверить уровень <b>{next}</b>? Это ещё {n} вопросов.",
+    failed: "Уровень <b>{level}</b> пока не подтверждён — нужно {pass} верных ответов из {n}.",
+    final: "Ваш уровень португальского: <b>{level}</b>",
+    take: "➡️ Пройти уровень {level}",
+    retry: "🔄 Пройти {level} ещё раз",
+    restart: "🔄 Начать сначала",
     enroll: "✍️ Записаться в Telegram",
     site: "🌐 Сайт школы",
     help: "Нажмите /test, чтобы пройти тест на уровень португальского.",
@@ -194,7 +199,7 @@ const TEXTS = {
       B1: ["B1 — средний",
         "Отличный результат! Для вас — <b>разговорный клуб</b> с носителями и " +
         "<b>индивидуальные занятия</b> под ваши цели."],
-      B2: ["B2 и выше — продвинутый",
+      B2: ["B2 — продвинутый",
         "Parabéns! 🎉 Вы свободно владеете языком. Поддерживайте форму в " +
         "<b>разговорном клубе</b> или на <b>индивидуальных занятиях</b>."],
     },
@@ -202,16 +207,22 @@ const TEXTS = {
   en: {
     hello:
       "Olá, {name}! 👋\n\n" +
-      "This is a short Portuguese level test by <b>VamosFalar</b> school.\n" +
-      "{n} questions, about 3 minutes. The test adapts to you: a right answer makes the next " +
-      "question harder, a wrong one — easier. Choose the option that fills the gap. " +
-      "If you don't know, tap “I don't know” — the result will be more accurate.",
-    start: "Start the test",
-    progress: "Question {i} of {n} · level {level}",
+      "This is a Portuguese level test by <b>VamosFalar</b> school.\n\n" +
+      "We start with level <b>A1</b>: {n} questions, about 3 minutes. Get {pass} or more right — " +
+      "the level is confirmed and you can move on to the next one (A2, B1, B2).\n\n" +
+      "Choose the option that fills the gap. If you don't know, tap “I don't know” — " +
+      "the result will be more accurate.",
+    start: "Start the A1 test",
+    progress: "Level {level} · question {i} of {n}",
     dont_know: "🤷 I don't know",
     score: "Correct answers: <b>{c}/{n}</b>",
-    level: "Your Portuguese level: <b>{level}</b>",
-    again: "🔄 Try again",
+    passed: "✅ Level <b>{level}</b> confirmed!",
+    offer: "Want to check level <b>{next}</b>? It's {n} more questions.",
+    failed: "Level <b>{level}</b> is not confirmed yet — you need {pass} correct answers out of {n}.",
+    final: "Your Portuguese level: <b>{level}</b>",
+    take: "➡️ Take level {level}",
+    retry: "🔄 Retake {level}",
+    restart: "🔄 Start over",
     enroll: "✍️ Enroll via Telegram",
     site: "🌐 School website",
     help: "Tap /test to take the Portuguese level test.",
@@ -230,7 +241,7 @@ const TEXTS = {
       B1: ["B1 — intermediate",
         "Great result! The <b>conversation club</b> with native speakers and " +
         "<b>private lessons</b> tailored to your goals are for you."],
-      B2: ["B2+ — advanced",
+      B2: ["B2 — advanced",
         "Parabéns! 🎉 You speak fluently. Keep in shape at the <b>conversation club</b> " +
         "or in <b>private lessons</b>."],
     },
@@ -245,7 +256,7 @@ for (const level of LEVELS) {
     const options = [...new Set(Object.values(q.options))];
     return { text: q.question, options, answer: options.indexOf(q.options[q.correct]) };
   });
-  if (POOL[level].length < TOTAL) throw new Error(`на уровне ${level} нужно хотя бы ${TOTAL} вопросов`);
+  if (POOL[level].length < PER_LEVEL) throw new Error(`на уровне ${level} нужно хотя бы ${PER_LEVEL} вопросов`);
 }
 
 // Детерминированный генератор: один и тот же seed — один и тот же порядок.
@@ -270,34 +281,12 @@ function shuffle(arr, key) {
   return a;
 }
 
-// По seed и ответам ("1" верно, "0" нет) восстанавливает уровни заданных вопросов и следующий вопрос.
-function replay(seed, bits) {
-  const used = Object.fromEntries(LEVELS.map((l) => [l, 0]));
-  const levels = [];
-  let li = 0;
-  for (const b of bits) {
-    levels.push(LEVELS[li]);
-    used[LEVELS[li]]++;
-    li = b === "1" ? Math.min(li + 1, LEVELS.length - 1) : Math.max(li - 1, 0);
-  }
-  const level = LEVELS[li];
-  const order = shuffle([...POOL[level].keys()], `${seed}:${level}`);
-  return { levels, next: { ...POOL[level][order[used[level]]], level } };
-}
+const PASS_COUNT = Math.ceil(PER_LEVEL * PASS_RATIO - 1e-9);
 
-function evaluate(seed, bits) {
-  const { levels } = replay(seed, bits);
-  const stats = Object.fromEntries(LEVELS.map((l) => [l, [0, 0]]));
-  levels.forEach((l, i) => {
-    stats[l][1]++;
-    if (bits[i] === "1") stats[l][0]++;
-  });
-  let reached = "A0";
-  for (const l of LEVELS) {
-    const [ok, asked] = stats[l];
-    if (asked >= MIN_ASKED && ok / asked >= PASS_RATIO) reached = l;
-  }
-  return { level: reached, stats };
+// k-й вопрос уровня для этого прохождения: свой порядок на каждый seed, без повторов.
+function questionAt(level, seed, k) {
+  const order = shuffle([...POOL[level].keys()], `${seed}:${level}`);
+  return POOL[level][order[k]];
 }
 
 // ================= СООБЩЕНИЯ =================
@@ -308,12 +297,12 @@ function langOf(user) {
   return /^(ru|uk|be|kk)/.test((user && user.language_code) || "") ? "ru" : "en";
 }
 
-function questionView(seed, bits, lang) {
+function questionView(level, seed, bits, lang) {
   const t = TEXTS[lang];
-  const q = replay(seed, bits).next;
-  const progress = fmt(t.progress, { i: bits.length + 1, n: TOTAL, level: q.level });
-  const tag = `a:${seed}:${bits || "-"}`;
-  const rows = shuffle([...q.options.keys()], `${seed}:${bits}`)
+  const q = questionAt(level, seed, bits.length);
+  const progress = fmt(t.progress, { level, i: bits.length + 1, n: PER_LEVEL });
+  const tag = `a:${level}:${seed}:${bits || "-"}`;
+  const rows = shuffle([...q.options.keys()], `${seed}:${level}:${bits}`)
     .map((i) => [{ text: q.options[i], callback_data: `${tag}:${i}` }]);
   rows.push([{ text: t.dont_know, callback_data: `${tag}:x` }]);
   return {
@@ -322,24 +311,38 @@ function questionView(seed, bits, lang) {
   };
 }
 
-function resultView(seed, bits, lang) {
-  const t = TEXTS[lang];
-  const { level, stats } = evaluate(seed, bits);
-  const [title, advice] = t.results[level];
-  const correct = [...bits].filter((b) => b === "1").length;
+function enrollButtons(t, lang, level) {
   const enrollUrl = `https://t.me/${CONTACT_USERNAME}?text=${encodeURIComponent(fmt(t.enroll_text, { level }))}`;
-  const detail = LEVELS.filter((l) => stats[l][1]).map((l) => `${l} ${stats[l][0]}/${stats[l][1]}`).join(", ");
-  return {
-    text: `${fmt(t.score, { c: correct, n: TOTAL })}\n${fmt(t.level, { level: title })}\n\n${advice}`,
-    reply_markup: {
-      inline_keyboard: [
-        [{ text: t.enroll, url: enrollUrl }],
-        [{ text: t.site, url: SITE_URL + (lang === "ru" ? "" : "?lang=en") }],
-        [{ text: t.again, callback_data: "go" }],
-      ],
-    },
-    summary: `${level} (${correct}/${TOTAL}; ${detail})`,
-  };
+  return [
+    [{ text: t.enroll, url: enrollUrl }],
+    [{ text: t.site, url: SITE_URL + (lang === "ru" ? "" : "?lang=en") }],
+  ];
+}
+
+// Итог уровня: подтверждён — предлагаем следующий; нет — показываем последний подтверждённый.
+function levelResultView(level, bits, lang) {
+  const t = TEXTS[lang];
+  const correct = [...bits].filter((b) => b === "1").length;
+  const passed = correct >= PASS_COUNT;
+  const li = LEVELS.indexOf(level);
+  const confirmed = passed ? level : li > 0 ? LEVELS[li - 1] : "A0";
+  const next = passed ? LEVELS[li + 1] : null;
+  const score = fmt(t.score, { c: correct, n: PER_LEVEL });
+  const [title, advice] = t.results[confirmed];
+
+  let text, rows;
+  if (passed && next) {
+    text = `${fmt(t.passed, { level })}\n${score}\n\n${fmt(t.offer, { next, n: PER_LEVEL })}`;
+    rows = [[{ text: fmt(t.take, { level: next }), callback_data: `L:${next}` }], ...enrollButtons(t, lang, confirmed)];
+  } else {
+    const head = passed ? fmt(t.passed, { level }) : fmt(t.failed, { level, pass: PASS_COUNT, n: PER_LEVEL });
+    text = `${head}\n${score}\n\n${fmt(t.final, { level: title })}\n\n${advice}`;
+    rows = [...enrollButtons(t, lang, confirmed)];
+    if (!passed) rows.push([{ text: fmt(t.retry, { level }), callback_data: `L:${level}` }]);
+    if (passed || level !== "A1") rows.push([{ text: t.restart, callback_data: "L:A1" }]);
+  }
+  const summary = `${level} ${passed ? "подтверждён" : "не подтверждён"} (${correct}/${PER_LEVEL}) → уровень ${confirmed}`;
+  return { text, reply_markup: { inline_keyboard: rows }, summary };
 }
 
 // ================= TELEGRAM =================
@@ -356,8 +359,8 @@ async function tg(env, method, body) {
 
 const newSeed = () => Math.floor(Math.random() * 10000);
 
-async function sendFirstQuestion(env, chatId, user) {
-  const view = questionView(newSeed(), "", langOf(user));
+async function sendLevelStart(env, chatId, user, level) {
+  const view = questionView(level, newSeed(), "", langOf(user));
   await tg(env, "sendMessage", { chat_id: chatId, parse_mode: "HTML", ...view });
 }
 
@@ -368,11 +371,11 @@ async function onMessage(env, msg) {
     await tg(env, "sendMessage", {
       chat_id: msg.chat.id,
       parse_mode: "HTML",
-      text: fmt(t.hello, { name: esc((msg.from && msg.from.first_name) || ""), n: TOTAL }),
-      reply_markup: { inline_keyboard: [[{ text: t.start, callback_data: "go" }]] },
+      text: fmt(t.hello, { name: esc((msg.from && msg.from.first_name) || ""), n: PER_LEVEL, pass: PASS_COUNT }),
+      reply_markup: { inline_keyboard: [[{ text: t.start, callback_data: "L:A1" }]] },
     });
   } else if (text.startsWith("/test")) {
-    await sendFirstQuestion(env, msg.chat.id, msg.from);
+    await sendLevelStart(env, msg.chat.id, msg.from, "A1");
   } else {
     await tg(env, "sendMessage", { chat_id: msg.chat.id, text: t.help });
   }
@@ -384,36 +387,40 @@ async function onCallback(env, call) {
   const messageId = call.message.message_id;
   await tg(env, "answerCallbackQuery", { callback_query_id: call.id });
 
+  // «Начать тест», «Пройти уровень …», «Ещё раз»: L:<уровень>
   const parts = (call.data || "").split(":");
-  let seed, bits, q;
-  if (parts[0] === "a" && parts.length === 4) {
-    seed = Number(parts[1]);
-    bits = parts[2] === "-" ? "" : parts[2];
-    if (Number.isInteger(seed) && /^[01]*$/.test(bits) && bits.length < TOTAL) q = replay(seed, bits).next;
+  if (parts[0] === "L") {
+    await sendLevelStart(env, chatId, call.from, LEVELS.includes(parts[1]) ? parts[1] : "A1");
+    return;
+  }
+
+  // Ответ: a:<уровень>:<seed>:<ответы>:<вариант>
+  let level, seed, bits, q;
+  if (parts[0] === "a" && parts.length === 5 && LEVELS.includes(parts[1])) {
+    level = parts[1];
+    seed = Number(parts[2]);
+    bits = parts[3] === "-" ? "" : parts[3];
+    if (Number.isInteger(seed) && /^[01]*$/.test(bits) && bits.length < PER_LEVEL) q = questionAt(level, seed, bits.length);
   }
   if (!q) {
-    // «Начать тест», «Пройти ещё раз» или кнопка от старой версии — начинаем заново.
-    await sendFirstQuestion(env, chatId, call.from);
+    // Кнопка от старой версии бота — начинаем заново.
+    await sendLevelStart(env, chatId, call.from, "A1");
     return;
   }
 
-  bits += parts[3] !== "x" && Number(parts[3]) === q.answer ? "1" : "0";
-  if (bits.length < TOTAL) {
-    const view = questionView(seed, bits, lang);
-    await tg(env, "editMessageText", { chat_id: chatId, message_id: messageId, parse_mode: "HTML", ...view });
-    return;
-  }
+  bits += parts[4] !== "x" && Number(parts[4]) === q.answer ? "1" : "0";
+  const view = bits.length < PER_LEVEL ? questionView(level, seed, bits, lang) : levelResultView(level, bits, lang);
+  const { summary, ...msg } = view;
+  await tg(env, "editMessageText", { chat_id: chatId, message_id: messageId, parse_mode: "HTML", ...msg });
 
-  const { summary, ...view } = resultView(seed, bits, lang);
-  await tg(env, "editMessageText", { chat_id: chatId, message_id: messageId, parse_mode: "HTML", ...view });
-  if (adminChat(env)) {
+  if (summary && adminChat(env)) {
     const u = call.from;
     let who = esc([u.first_name, u.last_name].filter(Boolean).join(" "));
     if (u.username) who += ` (@${u.username})`;
     await tg(env, "sendMessage", {
       chat_id: adminChat(env),
       parse_mode: "HTML",
-      text: `📝 Тест пройден: <a href="tg://user?id=${u.id}">${who}</a>\nУровень: <b>${summary}</b>`,
+      text: `📝 Тест: <a href="tg://user?id=${u.id}">${who}</a>\n<b>${summary}</b>`,
     });
   }
 }
